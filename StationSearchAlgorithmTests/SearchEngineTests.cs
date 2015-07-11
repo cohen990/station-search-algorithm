@@ -22,13 +22,13 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenEmptyDictionary_ThrowsArgumentException()
 		{
-			Assert.Throws<ArgumentException>(() => new SearchEngine(new Dictionary<string, List<string>>()));
+			Assert.Throws<ArgumentException>(() => new SearchEngine(new Dictionary<string, Dictionary<char?, List<string>>>()));
 		}
 
 		[Test]
 		public void GivenEmptyDictionary_ThrowsArgumentExceptionWithUsefulMessage()
 		{
-			var exception = Assert.Throws<ArgumentException>(() => new SearchEngine(new Dictionary<string, List<string>>()));
+			var exception = Assert.Throws<ArgumentException>(() => new SearchEngine(new Dictionary<string, Dictionary<char?, List<string>>>()));
 
 			Assert.That(exception.Message, Is.StringContaining("The lookups must not be empty."));
 		}
@@ -36,7 +36,7 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenDictionaryWithNoValues_ThrowsArgumentException()
 		{
-			Dictionary<string, List<string>> dict = new Dictionary<string, List<string>> { { "lookup", new List<string>() } };
+			Dictionary<string, Dictionary<char?, List<string>>> dict = new Dictionary<string, Dictionary<char?, List<string>>> { { "lookup", new Dictionary<char?, List<string>>() } };
 
 			Assert.Throws<ArgumentException>(() => new SearchEngine(dict));
 		}
@@ -44,7 +44,7 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenDictionaryWithNoValues_ThrowsArgumentExceptionWithUsefulMessage()
 		{
-			Dictionary<string, List<string>> dict = new Dictionary<string, List<string>> { { "lookup", new List<string>() } };
+			Dictionary<string, Dictionary<char?, List<string>>> dict = new Dictionary<string, Dictionary<char?, List<string>>> { { "lookup", new Dictionary<char?, List<string>>() } };
 
 			var exception = Assert.Throws<ArgumentException>(() => new SearchEngine(dict));
 
@@ -54,9 +54,12 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenValidDictionary_DoesntThrow()
 		{
-			Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> dict = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"lookup", new List<string> {"result"}}
+				{
+					"lookup",
+					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+				}
 			};
 
 			Assert.DoesNotThrow(() => new SearchEngine(dict));
@@ -66,9 +69,12 @@ namespace StationSearchAlgorithmTests
 		[Ignore("This should really be ignored, since it's more brittle than it's worth. If that property's name is changed then this will break every time - just wanted to show off.")]
 		public void GivenValidDictionary_SetsLookupsToProvidedDictionary()
 		{
-			Dictionary<string, List<string>> dict = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> dict = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"lookup", new List<string> {"result"}}
+				{
+					"lookup",
+					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+				}
 			};
 
 			var engine = new SearchEngine(dict);
@@ -89,9 +95,12 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenNull_ReturnsNoMatches()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"lookup", new List<string> {"result"}}
+				{
+					"lookup",
+					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+				}
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -103,9 +112,12 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenNull_ReturnsNoSuggestions()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"lookup", new List<string> {"result"}}
+				{
+					"lookup",
+					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+				}
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -118,9 +130,12 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenEmptyString_ReturnsNoMatches()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"lookup", new List<string> {"result"}}
+				{
+					"lookup",
+					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+				}
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -133,9 +148,12 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenWhitespace_ReturnsNoSuggestions()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"lookup", new List<string> {"result"}}
+				{
+					"lookup",
+					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+				}
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -148,9 +166,12 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenWhitespace_ReturnsNoMatches()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"lookup", new List<string> {"result"}}
+				{
+					"lookup",
+					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+				}
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -163,9 +184,12 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenEmptyString_ReturnsNoSuggestions()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"lookup", new List<string> {"result"}}
+				{
+					"lookup",
+					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+				}
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -178,9 +202,12 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenA_ReturnsNoMatches()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"lookup", new List<string> {"result"}}
+				{
+					"lookup",
+					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+				}
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -193,9 +220,12 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenA_ReturnsNoSuggestions()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"lookup", new List<string> {"result"}}
+				{
+					"lookup",
+					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+				}
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -208,14 +238,32 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenL_Returns1Match()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"l", new List<string> {"result"}},
-				{"lo", new List<string> {"result"}},
-				{"loo", new List<string> {"result"}},
-				{"look", new List<string> {"result"}},
-				{"looku", new List<string> {"result"}},
-				{"lookup", new List<string> {"result"}},
+				{
+					"l",
+					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+				},
+				{
+					"lo",
+					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+				},
+				{
+					"loo",
+					new Dictionary<char?, List<string>> {{'k', new List<string> {"result"}}}
+				},
+				{
+					"look",
+					new Dictionary<char?, List<string>> {{'u', new List<string> {"result"}}}
+				},
+				{
+					"looku",
+					new Dictionary<char?, List<string>> {{'p', new List<string> {"result"}}}
+				},
+				{
+					"lookup",
+					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+				},
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -228,14 +276,32 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenL_ReturnsResult()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"l", new List<string> {"result"}},
-				{"lo", new List<string> {"result"}},
-				{"loo", new List<string> {"result"}},
-				{"look", new List<string> {"result"}},
-				{"looku", new List<string> {"result"}},
-				{"lookup", new List<string> {"result"}},
+				{
+					"l",
+					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+				},
+				{
+					"lo",
+					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+				},
+				{
+					"loo",
+					new Dictionary<char?, List<string>> {{'k', new List<string> {"result"}}}
+				},
+				{
+					"look",
+					new Dictionary<char?, List<string>> {{'u', new List<string> {"result"}}}
+				},
+				{
+					"looku",
+					new Dictionary<char?, List<string>> {{'p', new List<string> {"result"}}}
+				},
+				{
+					"lookup",
+					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+				},
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -248,14 +314,32 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenL_Returns1Suggestion()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"l", new List<string> {"result"}},
-				{"lo", new List<string> {"result"}},
-				{"loo", new List<string> {"result"}},
-				{"look", new List<string> {"result"}},
-				{"looku", new List<string> {"result"}},
-				{"lookup", new List<string> {"result"}},
+				{
+					"l",
+					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+				},
+				{
+					"lo",
+					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+				},
+				{
+					"loo",
+					new Dictionary<char?, List<string>> {{'k', new List<string> {"result"}}}
+				},
+				{
+					"look",
+					new Dictionary<char?, List<string>> {{'u', new List<string> {"result"}}}
+				},
+				{
+					"looku",
+					new Dictionary<char?, List<string>> {{'p', new List<string> {"result"}}}
+				},
+				{
+					"lookup",
+					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+				},
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -268,14 +352,32 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenL_ReturnsE()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"l", new List<string> {"result"}},
-				{"lo", new List<string> {"result"}},
-				{"loo", new List<string> {"result"}},
-				{"look", new List<string> {"result"}},
-				{"looku", new List<string> {"result"}},
-				{"lookup", new List<string> {"result"}},
+				{
+					"l",
+					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+				},
+				{
+					"lo",
+					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+				},
+				{
+					"loo",
+					new Dictionary<char?, List<string>> {{'k', new List<string> {"result"}}}
+				},
+				{
+					"look",
+					new Dictionary<char?, List<string>> {{'u', new List<string> {"result"}}}
+				},
+				{
+					"looku",
+					new Dictionary<char?, List<string>> {{'p', new List<string> {"result"}}}
+				},
+				{
+					"lookup",
+					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+				},
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -288,14 +390,32 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLookup_Returns1Match()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"l", new List<string> {"result"}},
-				{"lo", new List<string> {"result"}},
-				{"loo", new List<string> {"result"}},
-				{"look", new List<string> {"result"}},
-				{"looku", new List<string> {"result"}},
-				{"lookup", new List<string> {"result"}},
+				{
+					"l",
+					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+				},
+				{
+					"lo",
+					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+				},
+				{
+					"loo",
+					new Dictionary<char?, List<string>> {{'k', new List<string> {"result"}}}
+				},
+				{
+					"look",
+					new Dictionary<char?, List<string>> {{'u', new List<string> {"result"}}}
+				},
+				{
+					"looku",
+					new Dictionary<char?, List<string>> {{'p', new List<string> {"result"}}}
+				},
+				{
+					"lookup",
+					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+				},
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -308,14 +428,32 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLookup_ReturnsResult()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"l", new List<string> {"result"}},
-				{"lo", new List<string> {"result"}},
-				{"loo", new List<string> {"result"}},
-				{"look", new List<string> {"result"}},
-				{"looku", new List<string> {"result"}},
-				{"lookup", new List<string> {"result"}},
+				{
+					"l",
+					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+				},
+				{
+					"lo",
+					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+				},
+				{
+					"loo",
+					new Dictionary<char?, List<string>> {{'k', new List<string> {"result"}}}
+				},
+				{
+					"look",
+					new Dictionary<char?, List<string>> {{'u', new List<string> {"result"}}}
+				},
+				{
+					"looku",
+					new Dictionary<char?, List<string>> {{'p', new List<string> {"result"}}}
+				},
+				{
+					"lookup",
+					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+				},
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -328,14 +466,32 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLookup_Returns0Suggestion()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"l", new List<string> {"result"}},
-				{"lo", new List<string> {"result"}},
-				{"loo", new List<string> {"result"}},
-				{"look", new List<string> {"result"}},
-				{"looku", new List<string> {"result"}},
-				{"lookup", new List<string> {"result"}},
+				{
+					"l",
+					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+				},
+				{
+					"lo",
+					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+				},
+				{
+					"loo",
+					new Dictionary<char?, List<string>> {{'k', new List<string> {"result"}}}
+				},
+				{
+					"look",
+					new Dictionary<char?, List<string>> {{'u', new List<string> {"result"}}}
+				},
+				{
+					"looku",
+					new Dictionary<char?, List<string>> {{'p', new List<string> {"result"}}}
+				},
+				{
+					"lookup",
+					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+				},
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -348,9 +504,22 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLWith3Matches_Returns3Matches()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"l", new List<string> {"lookup", "lol", "link"}}
+				{
+					"l",
+					new Dictionary<char?, List<string>>
+					{
+						{
+							'o',
+							new List<string> {"lookup", "lol"}
+						},
+						{
+							'i',
+							new List<string> {"link"}
+						},
+					}
+				}
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -363,9 +532,22 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLWith3Matches_ReturnsLookup()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"l", new List<string> {"lookup", "lol", "link"}}
+				{
+					"l",
+					new Dictionary<char?, List<string>>
+					{
+						{
+							'o',
+							new List<string> {"lookup", "lol"}
+						},
+						{
+							'i',
+							new List<string> {"link"}
+						},
+					}
+				}
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -378,9 +560,22 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLWith3Matches_ReturnsLol()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"l", new List<string> {"lookup", "lol", "link"}}
+				{
+					"l",
+					new Dictionary<char?, List<string>>
+					{
+						{
+							'o',
+							new List<string> {"lookup", "lol"}
+						},
+						{
+							'i',
+							new List<string> {"link"}
+						},
+					}
+				}
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -393,9 +588,22 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLWith3Matches_ReturnsLink()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"l", new List<string> {"lookup", "lol", "link"}}
+				{
+					"l",
+					new Dictionary<char?, List<string>>
+					{
+						{
+							'o',
+							new List<string> {"lookup", "lol"}
+						},
+						{
+							'i',
+							new List<string> {"link"}
+						},
+					}
+				}
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -408,9 +616,22 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLWith3Matches_Returns2Suggestions()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"l", new List<string> {"lookup", "lol", "link"}}
+				{
+					"l",
+					new Dictionary<char?, List<string>>
+					{
+						{
+							'o',
+							new List<string> {"lookup", "lol"}
+						},
+						{
+							'i',
+							new List<string> {"link"}
+						},
+					}
+				}
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -423,9 +644,22 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLWith3Matches_ReturnsO()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"l", new List<string> {"lookup", "lol", "link"}}
+				{
+					"l",
+					new Dictionary<char?, List<string>>
+					{
+						{
+							'o',
+							new List<string> {"lookup", "lol"}
+						},
+						{
+							'i',
+							new List<string> {"link"}
+						},
+					}
+				}
 			};
 
 			var engine = new SearchEngine(lookups);
@@ -438,9 +672,22 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLWith3Matches_ReturnsI()
 		{
-			Dictionary<string, List<string>> lookups = new Dictionary<string, List<string>>
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
 			{
-				{"l", new List<string> {"lookup", "lol", "link"}}
+				{
+					"l",
+					new Dictionary<char?, List<string>>
+					{
+						{
+							'o',
+							new List<string> {"lookup", "lol"}
+						},
+						{
+							'i',
+							new List<string> {"link"}
+						},
+					}
+				}
 			};
 
 			var engine = new SearchEngine(lookups);

@@ -23,7 +23,7 @@ namespace StationSearchAlgorithm.FluentApi
 			return this;
 		}
 
-		public Dictionary<string, List<string>> And(IStationPreprocessor preprocessor)
+		public Dictionary<string, Dictionary<char?, List<string>>> And(IStationPreprocessor preprocessor)
 		{
 			var stations = _source.Get();
 
@@ -40,6 +40,6 @@ namespace StationSearchAlgorithm.FluentApi
 
 	public interface IRequiresPreprocessor
 	{
-		Dictionary<string, List<string>> And(IStationPreprocessor preprocessor);
+		Dictionary<string, Dictionary<char?, List<string>>> And(IStationPreprocessor preprocessor);
 	}
 }

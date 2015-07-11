@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -8,7 +10,7 @@ namespace StationSearchAlgorithm
 	public class DefaultStationPreprocessor : IStationPreprocessor
 	{
 
-		public Dictionary<string, List<string>> GetStationsLookups(List<string> stations)
+		public Dictionary<string, Dictionary<char?, List<string>>> GetStationsLookups(List<string> stations)
 		{
 			if (stations == null)
 				throw new ArgumentNullException("stations");
@@ -16,38 +18,52 @@ namespace StationSearchAlgorithm
 			if (stations.Count == 0)
 				throw new ArgumentException("The list of stations was empty. We cannot possibly query an empty list of station names.");
 
-			var result = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+			var result = new Dictionary<string, Dictionary<char?, List<string>>>(StringComparer.OrdinalIgnoreCase);
 
-			var lookups = stations.Distinct().SelectMany(GetStationBeginnings);
+			var lookups = stations.Distinct().Select(GetStationBeginnings);
 
-			foreach (var lookup in lookups)
+			foreach (Dictionary<string, Dictionary<char?, List<string>>> lookup in lookups)
 			{
-				if (result.ContainsKey(lookup.Key))
+				foreach (string key in lookup.Keys)
 				{
-					result[lookup.Key].Add(lookup.Value);
-				}
-				else
-				{
-					result[lookup.Key] = new List<string>{lookup.Value};
+					Dictionary<char?, List<string>> suggestions = lookup[key];
+					foreach (KeyValuePair<char?, List<string>> suggestion in suggestions)
+					{
+						if (result[key].ContainsKey(suggestion.Key))
+						{
+							result[key][suggestion.Key].AddRange(suggestion.Value);
+						}
+						else
+						{
+							result[key][suggestion.Key] = suggestion.Value;
+						}
+					}
 				}
 			}
 
 			return result;
 		}
 
-		public List<KeyValuePair<string, string>> GetStationBeginnings(string stationName)
+		public Dictionary<string, Dictionary<char?, List<string>>> GetStationBeginnings(string stationName)
 		{
 			if (stationName == null)
 				throw new ArgumentNullException("stationName");
 			if (string.IsNullOrWhiteSpace(stationName))
-				return new List<KeyValuePair<string, string>>();
+				return new Dictionary<string, Dictionary<char?, List<string>>>();
 
-			var result = new List<KeyValuePair<string, string>>();
+			var result = new Dictionary<string, Dictionary<char?, List<string>>>();
 			var beginsWith = new StringBuilder();
-			foreach (var character in stationName)
+
+			int i;
+			for (i = 0; i < stationName.Length - 1; i++)
 			{
+				var character = stationName[i];
+
 				beginsWith.Append(character);
-				result.Add(new KeyValuePair<string, string>(beginsWith.ToString(), stationName));
+
+				var suggestions = new Dictionary<char?, List<string>> {{stationName[i + 1], new List<string> {stationName}}};
+
+				result[beginsWith.ToString()] = suggestions;
 			}
 
 			return result;

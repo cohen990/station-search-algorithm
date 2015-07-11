@@ -4,6 +4,6 @@ namespace StationSearchAlgorithm
 {
 	public interface IStationPreprocessor
 	{
-		Dictionary<string, List<string>> GetStationsLookups(List<string> stations);
+		Dictionary<string, Dictionary<char?, List<string>>> GetStationsLookups(List<string> stations);
 	}
 }

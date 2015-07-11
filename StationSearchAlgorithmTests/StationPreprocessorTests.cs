@@ -44,7 +44,7 @@ namespace StationSearchAlgorithmTests
 		public void GivenListOf1StationNameWith1Letter_Returns1KeyValuePair()
 		{
 			var preprocessor = new DefaultStationPreprocessor();
-			Dictionary<string, List<string>> result = preprocessor.GetStationsLookups(new List<string> { "a" });
+			var result = preprocessor.GetStationsLookups(new List<string> { "a" });
 
 			Assert.That(result.Count, Is.EqualTo(1));
 		}
@@ -53,7 +53,7 @@ namespace StationSearchAlgorithmTests
 		public void GivenListOf1StationNameWith1Letter_ReturnsCorrectKey()
 		{
 			var preprocessor = new DefaultStationPreprocessor();
-			Dictionary<string, List<string>> result = preprocessor.GetStationsLookups(new List<string> { "a" });
+			var result = preprocessor.GetStationsLookups(new List<string> { "a" });
 
 			Assert.That(result.Single().Key, Is.EqualTo("a"));
 		}
@@ -62,7 +62,7 @@ namespace StationSearchAlgorithmTests
 		public void GivenCapitolA_ResultIsCaseInsensetive()
 		{
 			var preprocessor = new DefaultStationPreprocessor();
-			Dictionary<string, List<string>> result = preprocessor.GetStationsLookups(new List<string> { "A" });
+			var result = preprocessor.GetStationsLookups(new List<string> { "A" });
 
 			Assert.That(result.ContainsKey("a"));
 		}
@@ -71,7 +71,7 @@ namespace StationSearchAlgorithmTests
 		public void GivenLowecaseA_ResultIsCaseInsensetive()
 		{
 			var preprocessor = new DefaultStationPreprocessor();
-			Dictionary<string, List<string>> result = preprocessor.GetStationsLookups(new List<string> { "a" });
+			var result = preprocessor.GetStationsLookups(new List<string> { "a" });
 
 			Assert.That(result.ContainsKey("A"));
 		}
@@ -82,7 +82,7 @@ namespace StationSearchAlgorithmTests
 			var preprocessor = new DefaultStationPreprocessor();
 			string expected = "a";
 
-			Dictionary<string, List<string>> result = preprocessor.GetStationsLookups(new List<string> { expected });
+			var result = preprocessor.GetStationsLookups(new List<string> { expected });
 
 			Assert.That(result.Single().Value.Single(), Is.EqualTo(expected));
 		}
@@ -91,7 +91,7 @@ namespace StationSearchAlgorithmTests
 		public void GivenListOf2StationsWith1Letter_Returns2KeyValuePairs()
 		{
 			var preprocessor = new DefaultStationPreprocessor();
-			Dictionary<string, List<string>> result = preprocessor.GetStationsLookups(new List<string> { "a", "b" });
+			var result = preprocessor.GetStationsLookups(new List<string> { "a", "b" });
 
 			Assert.That(result.Count, Is.EqualTo(2));
 		}
@@ -100,25 +100,25 @@ namespace StationSearchAlgorithmTests
 		public void GivenListOf2StationsWith1Letter_ReturnsLastStationWithCorrectKey()
 		{
 			var preprocessor = new DefaultStationPreprocessor();
-			Dictionary<string, List<string>> result = preprocessor.GetStationsLookups(new List<string> { "a", "b" });
+			var result = preprocessor.GetStationsLookups(new List<string> { "a", "b" });
 
 			Assert.That(result.SingleOrDefault(x => x.Key.Equals("b")), Is.Not.Null);
 		}
 
 		[Test]
-		public void GivenListOf2StationsWith1Letter_ReturnsLastStationWithCorrectValue()
+		public void GivenListOf2StationsWith1Letter_Returns1Suggestion()
 		{
 			var preprocessor = new DefaultStationPreprocessor();
-			Dictionary<string, List<string>> result = preprocessor.GetStationsLookups(new List<string> { "a", "b" });
+			Dictionary<string, Dictionary<char?, List<string>>> result = preprocessor.GetStationsLookups(new List<string> { "a", "b" });
 
-			Assert.That(result.SingleOrDefault(x => x.Value.Contains("b")), Is.Not.Null);
+			Assert.That(result["b"].Keys.Count, Is.EqualTo(1));
 		}
 
 		[Test]
 		public void GivenTokyo_Returns5Pairs()
 		{
 			var preprocessor = new DefaultStationPreprocessor();
-			Dictionary<string, List<string>> result = preprocessor.GetStationsLookups(new List<string> { "Tokyo" });
+			var result = preprocessor.GetStationsLookups(new List<string> { "Tokyo" });
 
 			Assert.That(result.Count(), Is.EqualTo(5));
 		}
@@ -127,7 +127,7 @@ namespace StationSearchAlgorithmTests
 		public void GivenTokyoTwice_Returns5Pairs()
 		{
 			var preprocessor = new DefaultStationPreprocessor();
-			Dictionary<string, List<string>> result = preprocessor.GetStationsLookups(new List<string> { "Tokyo", "Tokyo" });
+			var result = preprocessor.GetStationsLookups(new List<string> { "Tokyo", "Tokyo" });
 
 			Assert.That(result.Count(), Is.EqualTo(5));
 		}
@@ -136,7 +136,7 @@ namespace StationSearchAlgorithmTests
 		public void GivenTokyoAndTibet_ReturnsTWithTwoValues()
 		{
 			var preprocessor = new DefaultStationPreprocessor();
-			Dictionary<string, List<string>> result = preprocessor.GetStationsLookups(new List<string> { "Tokyo", "Tibet" });
+			var result = preprocessor.GetStationsLookups(new List<string> { "Tokyo", "Tibet" });
 
 			Assert.That(result["t"].Count, Is.EqualTo(2) );
 		}
@@ -145,18 +145,18 @@ namespace StationSearchAlgorithmTests
 		public void GivenTokyoAndTibet_ReturnsTWithTokyo()
 		{
 			var preprocessor = new DefaultStationPreprocessor();
-			Dictionary<string, List<string>> result = preprocessor.GetStationsLookups(new List<string> { "Tokyo", "Tibet" });
+			var result = preprocessor.GetStationsLookups(new List<string> { "Tokyo", "Tibet" });
 
-			Assert.That(result["t"].Count(x => x == "Tokyo"), Is.EqualTo(1));
+			Assert.That(result["t"]['o'].Count , Is.EqualTo(1));
 		}
 
 		[Test]
 		public void GivenTokyoAndTibet_ReturnsTWithTibet()
 		{
 			var preprocessor = new DefaultStationPreprocessor();
-			Dictionary<string, List<string>> result = preprocessor.GetStationsLookups(new List<string> { "Tokyo", "Tibet" });
+			var result = preprocessor.GetStationsLookups(new List<string> { "Tokyo", "Tibet" });
 
-			Assert.That(result["t"].Count(x => x == "Tibet"), Is.EqualTo(1) );
+			Assert.That(result["t"]['i'].Count, Is.EqualTo(1) );
 		}
 	}
 

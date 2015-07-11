@@ -6,9 +6,9 @@ namespace StationSearchAlgorithm
 {
 	public class SearchEngine
 	{
-		private readonly Dictionary<string, List<string>> _lookupTable;
+		private readonly Dictionary<string, Dictionary<char?, List<string>>> _lookupTable;
 
-		public SearchEngine(Dictionary<string, List<string>> lookups)
+		public SearchEngine(Dictionary<string, Dictionary<char?, List<string>>> lookups)
 		{
 			if (lookups == null)
 				throw new ArgumentNullException("lookups");
@@ -27,13 +27,8 @@ namespace StationSearchAlgorithm
 			if(!_lookupTable.ContainsKey(searchTerm))
 				return SearchResult.Empty;
 
-			var matches = _lookupTable[searchTerm];
-			var suggestions = new List<char>();
-
-			suggestions = matches.Where(x => x.Length > searchTerm.Length)
-				.Select(x => x[searchTerm.Length])
-				.Distinct()
-				.ToList();
+			List<char?> suggestions = _lookupTable[searchTerm].Keys.ToList();
+			var matches = _lookupTable[searchTerm].Values.SelectMany(x => x).ToList();
 
 			return new SearchResult(matches, suggestions);
 		}

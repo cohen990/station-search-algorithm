@@ -6,15 +6,15 @@ namespace StationSearchAlgorithm
 	{
 		public List<string> Matches { get; private set; }
 
-		public List<char> Suggestions { get; private set; }
+		public List<char?> Suggestions { get; private set; }
 
 		private SearchResult()
 		{
 			Matches = new List<string>();
-			Suggestions = new List<char>();
+			Suggestions = new List<char?>();
 		}
 
-		public SearchResult(List<string> matches, List<char> suggestions)
+		public SearchResult(List<string> matches, List<char?> suggestions)
 		{
 			Matches = matches;
 			Suggestions = suggestions;
