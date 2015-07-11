@@ -45,6 +45,7 @@
     <Compile Include="FluentApi\StationLookup.cs" />
     <Compile Include="IStationPreprocessor.cs" />
     <Compile Include="IStationSource.cs" />
+    <Compile Include="LookupTable.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DefaultStationPreprocessor.cs" />

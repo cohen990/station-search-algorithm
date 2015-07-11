@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
 using NUnit.Framework;
 using StationSearchAlgorithm;
-using StationSearchAlgorithm.FluentApi;
 
 namespace StationSearchAlgorithmTests
 {
@@ -20,45 +17,63 @@ namespace StationSearchAlgorithmTests
 		}
 
 		[Test]
-		public void GivenEmptyDictionary_ThrowsArgumentException()
+		public void GivenEmptyLookup_ThrowsInvalidLookupTableException()
 		{
-			Assert.Throws<ArgumentException>(() => new SearchEngine(new Dictionary<string, Dictionary<char?, List<string>>>()));
+			Assert.Throws<InvalidLookupTableException>(() => new SearchEngine(new LookupTable()));
 		}
 
 		[Test]
-		public void GivenEmptyDictionary_ThrowsArgumentExceptionWithUsefulMessage()
+		public void GivenEmptyLookup_ThrowsInvalidLookupTableExceptionWithUsefulMessage()
 		{
-			var exception = Assert.Throws<ArgumentException>(() => new SearchEngine(new Dictionary<string, Dictionary<char?, List<string>>>()));
+			var exception = Assert.Throws<InvalidLookupTableException>(() => new SearchEngine(new LookupTable()));
 
 			Assert.That(exception.Message, Is.StringContaining("The lookups must not be empty."));
 		}
 
 		[Test]
-		public void GivenDictionaryWithNoValues_ThrowsArgumentException()
+		public void GivenNullSuggestions_ThrowsInvalidLookupTableException()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> dict = new Dictionary<string, Dictionary<char?, List<string>>> { { "lookup", new Dictionary<char?, List<string>>() } };
+			LookupTable dict = new LookupTable { { "lookup", null } };
 
-			Assert.Throws<ArgumentException>(() => new SearchEngine(dict));
+			Assert.Throws<InvalidLookupTableException>(() => new SearchEngine(dict));
 		}
 
 		[Test]
-		public void GivenDictionaryWithNoValues_ThrowsArgumentExceptionWithUsefulMessage()
+		public void GivenNullSuggestions_ThrowsInvalidLookupTableExceptionWithUsefulMessage()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> dict = new Dictionary<string, Dictionary<char?, List<string>>> { { "lookup", new Dictionary<char?, List<string>>() } };
+			LookupTable dict = new LookupTable { { "lookup", null } };
 
-			var exception = Assert.Throws<ArgumentException>(() => new SearchEngine(dict));
+			var exception = Assert.Throws<InvalidLookupTableException>(() => new SearchEngine(dict));
 
-			Assert.That(exception.Message, Is.StringContaining("None of the lookups (keys) have results (values). This is invalid as a lookup table."));
+			Assert.That(exception.Message, Is.StringContaining("All of the Suggestions are null. This is invalid as a lookup table."));
+		}
+
+		[Test]
+		public void GivenEmptySuggestions_ThrowsInvalidLookupTableException()
+		{
+			LookupTable dict = new LookupTable { { "lookup", new Suggestions() } };
+
+			Assert.Throws<InvalidLookupTableException>(() => new SearchEngine(dict));
+		}
+
+		[Test]
+		public void GivenEmptySuggestions_ThrowsInvalidLookupTableExceptionWithUsefulMessage()
+		{
+			LookupTable dict = new LookupTable { { "lookup", new Suggestions() } };
+
+			var exception = Assert.Throws<InvalidLookupTableException>(() => new SearchEngine(dict));
+
+			Assert.That(exception.Message, Is.StringContaining("None of the lookups have any suggestions. This is invalid as a lookup table."));
 		}
 
 		[Test]
 		public void GivenValidDictionary_DoesntThrow()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> dict = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable dict = new LookupTable
 			{
 				{
 					"lookup",
-					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+					new Suggestions {{null, new List<string> {"result"}}}
 				}
 			};
 
@@ -69,11 +84,11 @@ namespace StationSearchAlgorithmTests
 		[Ignore("This should really be ignored, since it's more brittle than it's worth. If that property's name is changed then this will break every time - just wanted to show off.")]
 		public void GivenValidDictionary_SetsLookupsToProvidedDictionary()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> dict = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable dict = new LookupTable
 			{
 				{
 					"lookup",
-					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+					new Suggestions {{null, new List<string> {"result"}}}
 				}
 			};
 
@@ -95,11 +110,11 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenNull_ReturnsNoMatches()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"lookup",
-					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+					new Suggestions {{null, new List<string> {"result"}}}
 				}
 			};
 
@@ -112,11 +127,11 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenNull_ReturnsNoSuggestions()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"lookup",
-					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+					new Suggestions {{null, new List<string> {"result"}}}
 				}
 			};
 
@@ -130,11 +145,11 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenEmptyString_ReturnsNoMatches()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"lookup",
-					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+					new Suggestions {{null, new List<string> {"result"}}}
 				}
 			};
 
@@ -148,11 +163,11 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenWhitespace_ReturnsNoSuggestions()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"lookup",
-					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+					new Suggestions {{null, new List<string> {"result"}}}
 				}
 			};
 
@@ -166,11 +181,11 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenWhitespace_ReturnsNoMatches()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"lookup",
-					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+					new Suggestions {{null, new List<string> {"result"}}}
 				}
 			};
 
@@ -184,11 +199,11 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenEmptyString_ReturnsNoSuggestions()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"lookup",
-					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+					new Suggestions {{null, new List<string> {"result"}}}
 				}
 			};
 
@@ -202,11 +217,11 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenA_ReturnsNoMatches()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"lookup",
-					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+					new Suggestions {{null, new List<string> {"result"}}}
 				}
 			};
 
@@ -220,11 +235,11 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenA_ReturnsNoSuggestions()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"lookup",
-					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+					new Suggestions {{null, new List<string> {"result"}}}
 				}
 			};
 
@@ -238,31 +253,31 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenL_Returns1Match()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"l",
-					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+					new Suggestions {{'o', new List<string> {"result"}}}
 				},
 				{
 					"lo",
-					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+					new Suggestions {{'o', new List<string> {"result"}}}
 				},
 				{
 					"loo",
-					new Dictionary<char?, List<string>> {{'k', new List<string> {"result"}}}
+					new Suggestions {{'k', new List<string> {"result"}}}
 				},
 				{
 					"look",
-					new Dictionary<char?, List<string>> {{'u', new List<string> {"result"}}}
+					new Suggestions {{'u', new List<string> {"result"}}}
 				},
 				{
 					"looku",
-					new Dictionary<char?, List<string>> {{'p', new List<string> {"result"}}}
+					new Suggestions {{'p', new List<string> {"result"}}}
 				},
 				{
 					"lookup",
-					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+					new Suggestions {{null, new List<string> {"result"}}}
 				},
 			};
 
@@ -276,31 +291,31 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenL_ReturnsResult()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"l",
-					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+					new Suggestions {{'o', new List<string> {"result"}}}
 				},
 				{
 					"lo",
-					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+					new Suggestions {{'o', new List<string> {"result"}}}
 				},
 				{
 					"loo",
-					new Dictionary<char?, List<string>> {{'k', new List<string> {"result"}}}
+					new Suggestions {{'k', new List<string> {"result"}}}
 				},
 				{
 					"look",
-					new Dictionary<char?, List<string>> {{'u', new List<string> {"result"}}}
+					new Suggestions {{'u', new List<string> {"result"}}}
 				},
 				{
 					"looku",
-					new Dictionary<char?, List<string>> {{'p', new List<string> {"result"}}}
+					new Suggestions {{'p', new List<string> {"result"}}}
 				},
 				{
 					"lookup",
-					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+					new Suggestions {{null, new List<string> {"result"}}}
 				},
 			};
 
@@ -314,31 +329,31 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenL_Returns1Suggestion()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"l",
-					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+					new Suggestions {{'o', new List<string> {"result"}}}
 				},
 				{
 					"lo",
-					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+					new Suggestions {{'o', new List<string> {"result"}}}
 				},
 				{
 					"loo",
-					new Dictionary<char?, List<string>> {{'k', new List<string> {"result"}}}
+					new Suggestions {{'k', new List<string> {"result"}}}
 				},
 				{
 					"look",
-					new Dictionary<char?, List<string>> {{'u', new List<string> {"result"}}}
+					new Suggestions {{'u', new List<string> {"result"}}}
 				},
 				{
 					"looku",
-					new Dictionary<char?, List<string>> {{'p', new List<string> {"result"}}}
+					new Suggestions {{'p', new List<string> {"result"}}}
 				},
 				{
 					"lookup",
-					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+					new Suggestions {{null, new List<string> {"result"}}}
 				},
 			};
 
@@ -352,31 +367,31 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenL_ReturnsE()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"l",
-					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+					new Suggestions {{'o', new List<string> {"result"}}}
 				},
 				{
 					"lo",
-					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+					new Suggestions {{'o', new List<string> {"result"}}}
 				},
 				{
 					"loo",
-					new Dictionary<char?, List<string>> {{'k', new List<string> {"result"}}}
+					new Suggestions {{'k', new List<string> {"result"}}}
 				},
 				{
 					"look",
-					new Dictionary<char?, List<string>> {{'u', new List<string> {"result"}}}
+					new Suggestions {{'u', new List<string> {"result"}}}
 				},
 				{
 					"looku",
-					new Dictionary<char?, List<string>> {{'p', new List<string> {"result"}}}
+					new Suggestions {{'p', new List<string> {"result"}}}
 				},
 				{
 					"lookup",
-					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+					new Suggestions {{null, new List<string> {"result"}}}
 				},
 			};
 
@@ -390,31 +405,31 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLookup_Returns1Match()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"l",
-					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+					new Suggestions {{'o', new List<string> {"result"}}}
 				},
 				{
 					"lo",
-					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+					new Suggestions {{'o', new List<string> {"result"}}}
 				},
 				{
 					"loo",
-					new Dictionary<char?, List<string>> {{'k', new List<string> {"result"}}}
+					new Suggestions {{'k', new List<string> {"result"}}}
 				},
 				{
 					"look",
-					new Dictionary<char?, List<string>> {{'u', new List<string> {"result"}}}
+					new Suggestions {{'u', new List<string> {"result"}}}
 				},
 				{
 					"looku",
-					new Dictionary<char?, List<string>> {{'p', new List<string> {"result"}}}
+					new Suggestions {{'p', new List<string> {"result"}}}
 				},
 				{
 					"lookup",
-					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+					new Suggestions {{null, new List<string> {"result"}}}
 				},
 			};
 
@@ -428,31 +443,31 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLookup_ReturnsResult()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"l",
-					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+					new Suggestions {{'o', new List<string> {"result"}}}
 				},
 				{
 					"lo",
-					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+					new Suggestions {{'o', new List<string> {"result"}}}
 				},
 				{
 					"loo",
-					new Dictionary<char?, List<string>> {{'k', new List<string> {"result"}}}
+					new Suggestions {{'k', new List<string> {"result"}}}
 				},
 				{
 					"look",
-					new Dictionary<char?, List<string>> {{'u', new List<string> {"result"}}}
+					new Suggestions {{'u', new List<string> {"result"}}}
 				},
 				{
 					"looku",
-					new Dictionary<char?, List<string>> {{'p', new List<string> {"result"}}}
+					new Suggestions {{'p', new List<string> {"result"}}}
 				},
 				{
 					"lookup",
-					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+					new Suggestions {{null, new List<string> {"result"}}}
 				},
 			};
 
@@ -466,31 +481,31 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLookup_Returns0Suggestion()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"l",
-					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+					new Suggestions {{'o', new List<string> {"result"}}}
 				},
 				{
 					"lo",
-					new Dictionary<char?, List<string>> {{'o', new List<string> {"result"}}}
+					new Suggestions {{'o', new List<string> {"result"}}}
 				},
 				{
 					"loo",
-					new Dictionary<char?, List<string>> {{'k', new List<string> {"result"}}}
+					new Suggestions {{'k', new List<string> {"result"}}}
 				},
 				{
 					"look",
-					new Dictionary<char?, List<string>> {{'u', new List<string> {"result"}}}
+					new Suggestions {{'u', new List<string> {"result"}}}
 				},
 				{
 					"looku",
-					new Dictionary<char?, List<string>> {{'p', new List<string> {"result"}}}
+					new Suggestions {{'p', new List<string> {"result"}}}
 				},
 				{
 					"lookup",
-					new Dictionary<char?, List<string>> {{null, new List<string> {"result"}}}
+					new Suggestions {{null, new List<string> {"result"}}}
 				},
 			};
 
@@ -504,11 +519,11 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLWith3Matches_Returns3Matches()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"l",
-					new Dictionary<char?, List<string>>
+					new Suggestions
 					{
 						{
 							'o',
@@ -532,11 +547,11 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLWith3Matches_ReturnsLookup()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"l",
-					new Dictionary<char?, List<string>>
+					new Suggestions
 					{
 						{
 							'o',
@@ -560,11 +575,11 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLWith3Matches_ReturnsLol()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"l",
-					new Dictionary<char?, List<string>>
+					new Suggestions
 					{
 						{
 							'o',
@@ -588,11 +603,11 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLWith3Matches_ReturnsLink()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"l",
-					new Dictionary<char?, List<string>>
+					new Suggestions
 					{
 						{
 							'o',
@@ -616,11 +631,11 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLWith3Matches_Returns2Suggestions()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"l",
-					new Dictionary<char?, List<string>>
+					new Suggestions
 					{
 						{
 							'o',
@@ -644,11 +659,11 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLWith3Matches_ReturnsO()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"l",
-					new Dictionary<char?, List<string>>
+					new Suggestions
 					{
 						{
 							'o',
@@ -672,11 +687,11 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenLWith3Matches_ReturnsI()
 		{
-			Dictionary<string, Dictionary<char?, List<string>>> lookups = new Dictionary<string, Dictionary<char?, List<string>>>
+			LookupTable lookups = new LookupTable
 			{
 				{
 					"l",
-					new Dictionary<char?, List<string>>
+					new Suggestions
 					{
 						{
 							'o',

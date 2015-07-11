@@ -6,16 +6,18 @@ namespace StationSearchAlgorithm
 {
 	public class SearchEngine
 	{
-		private readonly Dictionary<string, Dictionary<char?, List<string>>> _lookupTable;
+		private readonly LookupTable _lookupTable;
 
-		public SearchEngine(Dictionary<string, Dictionary<char?, List<string>>> lookups)
+		public SearchEngine(LookupTable lookups)
 		{
 			if (lookups == null)
 				throw new ArgumentNullException("lookups");
 			if (lookups.Count == 0)
-				throw new ArgumentException("The lookups must not be empty.", "lookups");
-			if (lookups.All(x => x.Value.Count == 0))
-				throw new ArgumentException("None of the lookups (keys) have results (values). This is invalid as a lookup table.");
+				throw new InvalidLookupTableException("The lookups must not be empty.");
+			if (lookups.Values.All(x => x == null))
+				throw new InvalidLookupTableException("All of the Suggestions are null. This is invalid as a lookup table.");
+			if (lookups.Values.All(x => x.Count == 0))
+				throw new InvalidLookupTableException("None of the lookups have any suggestions. This is invalid as a lookup table.");
 
 			_lookupTable = lookups;
 		}
@@ -27,8 +29,8 @@ namespace StationSearchAlgorithm
 			if(!_lookupTable.ContainsKey(searchTerm))
 				return SearchResult.Empty;
 
-			List<char?> suggestions = _lookupTable[searchTerm].Keys.ToList();
-			var matches = _lookupTable[searchTerm].Values.SelectMany(x => x).ToList();
+			List<char> suggestions = _lookupTable[searchTerm].Keys.ToList();
+			var matches = _lookupTable[searchTerm].AllValues();
 
 			return new SearchResult(matches, suggestions);
 		}

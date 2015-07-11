@@ -109,7 +109,7 @@ namespace StationSearchAlgorithmTests
 		public void GivenListOf2StationsWith1Letter_Returns1Suggestion()
 		{
 			var preprocessor = new DefaultStationPreprocessor();
-			Dictionary<string, Dictionary<char?, List<string>>> result = preprocessor.GetStationsLookups(new List<string> { "a", "b" });
+			LookupTable result = preprocessor.GetStationsLookups(new List<string> { "a", "b" });
 
 			Assert.That(result["b"].Keys.Count, Is.EqualTo(1));
 		}
