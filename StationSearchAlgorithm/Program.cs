@@ -11,7 +11,7 @@ namespace StationSearchAlgorithm
 		static void Main()
 		{
 			var watch = Stopwatch.StartNew();
-			Dictionary<string, List<string>> lookups = StationLookup.Get()
+			Dictionary<string, Dictionary<char?, List<string>>> lookups = StationLookup.Get()
 				.With(new FileStationSource("station-names.txt"))
 				//.With(new FileStationSource("BIGdata.txt")) // Swap this with previous line for a file with 22,000 GUIDs
 				.And(new DefaultStationPreprocessor());
