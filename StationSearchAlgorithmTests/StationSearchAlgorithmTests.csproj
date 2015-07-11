@@ -43,7 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProgramInitializeTests.cs" />
+    <Compile Include="FileStationSourceTests.cs" />
+    <Compile Include="StationPreprocessorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchTests.cs" />
   </ItemGroup>

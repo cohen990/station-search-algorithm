@@ -5,10 +5,10 @@ using System.Text;
 
 namespace StationSearchAlgorithm
 {
-	public class StationPreprocessor : IStationPreprocessor
+	public class DefaultStationPreprocessor : IStationPreprocessor
 	{
 
-		public List<KeyValuePair<string, string>> GetStationsLookups(List<string> stations)
+		public Dictionary<string, List<string>> GetStationsLookups(List<string> stations)
 		{
 			if (stations == null)
 				throw new ArgumentNullException("stations");
@@ -16,9 +16,23 @@ namespace StationSearchAlgorithm
 			if (stations.Count == 0)
 				throw new ArgumentException("The list of stations was empty. We cannot possibly query an empty list of station names.");
 
-			var result = stations.Distinct().SelectMany(GetStationBeginnings);
+			var result = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
-			return result.ToList();
+			var lookups = stations.Distinct().SelectMany(GetStationBeginnings);
+
+			foreach (var lookup in lookups)
+			{
+				if (result.ContainsKey(lookup.Key))
+				{
+					result[lookup.Key].Add(lookup.Value);
+				}
+				else
+				{
+					result[lookup.Key] = new List<string>{lookup.Value};
+				}
+			}
+
+			return result;
 		}
 
 		public List<KeyValuePair<string, string>> GetStationBeginnings(string stationName)
