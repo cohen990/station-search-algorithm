@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FluentApi\StationLookup.cs" />
+    <Compile Include="InvalidLookupTableException.cs" />
     <Compile Include="IStationPreprocessor.cs" />
     <Compile Include="IStationSource.cs" />
     <Compile Include="LookupTable.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="FileStationSource.cs" />
     <Compile Include="SearchEngine.cs" />
     <Compile Include="SearchResult.cs" />
+    <Compile Include="SuggestionResultTable.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

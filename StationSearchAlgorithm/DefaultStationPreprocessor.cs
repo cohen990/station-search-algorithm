@@ -16,7 +16,7 @@ namespace StationSearchAlgorithm
 			if (stations.Count == 0)
 				throw new ArgumentException("The list of stations was empty. We cannot possibly query an empty list of station names.");
 
-			var result = new LookupTable(StringComparer.OrdinalIgnoreCase);
+			var result = new LookupTable();
 
 			var lookups = stations.Distinct().Select(GetStationBeginnings);
 
@@ -24,9 +24,16 @@ namespace StationSearchAlgorithm
 			{
 				foreach (string key in lookup.Keys)
 				{
-					Suggestions suggestions = lookup[key];
-					foreach (KeyValuePair<char, List<string>> suggestion in suggestions)
+					SuggestionResultTable suggestionResultTable = lookup[key];
+					foreach (KeyValuePair<char, List<string>> suggestion in suggestionResultTable)
 					{
+						if (!result.ContainsKey(key))
+						{
+							result[key] = suggestionResultTable;
+
+							continue;
+						}
+
 						if (result[key].ContainsKey(suggestion.Key))
 						{
 							result[key][suggestion.Key].AddRange(suggestion.Value);
@@ -59,10 +66,15 @@ namespace StationSearchAlgorithm
 
 				beginsWith.Append(character);
 
-				var suggestions = new Suggestions {{stationName[i + 1], new List<string> {stationName}}};
+				var suggestions = new SuggestionResultTable {{stationName[i + 1], new List<string> {stationName}}};
 
 				result[beginsWith.ToString()] = suggestions;
 			}
+
+			beginsWith.Append(stationName[stationName.Length - 1]);
+			var lastSuggestion = new SuggestionResultTable {{'\0', new List<string> {stationName}}};
+
+			result[beginsWith.ToString()] = lastSuggestion;
 
 			return result;
 		}

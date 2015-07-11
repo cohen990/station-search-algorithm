@@ -45,13 +45,13 @@ namespace StationSearchAlgorithmTests
 
 			var exception = Assert.Throws<InvalidLookupTableException>(() => new SearchEngine(dict));
 
-			Assert.That(exception.Message, Is.StringContaining("All of the Suggestions are null. This is invalid as a lookup table."));
+			Assert.That(exception.Message, Is.StringContaining("All of the SuggestionResultTable are null. This is invalid as a lookup table."));
 		}
 
 		[Test]
 		public void GivenEmptySuggestions_ThrowsInvalidLookupTableException()
 		{
-			LookupTable dict = new LookupTable { { "lookup", new Suggestions() } };
+			LookupTable dict = new LookupTable { { "lookup", new SuggestionResultTable() } };
 
 			Assert.Throws<InvalidLookupTableException>(() => new SearchEngine(dict));
 		}
@@ -59,7 +59,7 @@ namespace StationSearchAlgorithmTests
 		[Test]
 		public void GivenEmptySuggestions_ThrowsInvalidLookupTableExceptionWithUsefulMessage()
 		{
-			LookupTable dict = new LookupTable { { "lookup", new Suggestions() } };
+			LookupTable dict = new LookupTable { { "lookup", new SuggestionResultTable() } };
 
 			var exception = Assert.Throws<InvalidLookupTableException>(() => new SearchEngine(dict));
 
@@ -73,7 +73,7 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"lookup",
-					new Suggestions {{null, new List<string> {"result"}}}
+					new SuggestionResultTable {{'\0', new List<string> {"result"}}}
 				}
 			};
 
@@ -88,7 +88,7 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"lookup",
-					new Suggestions {{null, new List<string> {"result"}}}
+					new SuggestionResultTable {{'\0', new List<string> {"result"}}}
 				}
 			};
 
@@ -114,7 +114,7 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"lookup",
-					new Suggestions {{null, new List<string> {"result"}}}
+					new SuggestionResultTable {{'\0', new List<string> {"result"}}}
 				}
 			};
 
@@ -131,7 +131,7 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"lookup",
-					new Suggestions {{null, new List<string> {"result"}}}
+					new SuggestionResultTable {{'\0', new List<string> {"result"}}}
 				}
 			};
 
@@ -149,7 +149,7 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"lookup",
-					new Suggestions {{null, new List<string> {"result"}}}
+					new SuggestionResultTable {{'\0', new List<string> {"result"}}}
 				}
 			};
 
@@ -167,7 +167,7 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"lookup",
-					new Suggestions {{null, new List<string> {"result"}}}
+					new SuggestionResultTable {{'\0', new List<string> {"result"}}}
 				}
 			};
 
@@ -185,7 +185,7 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"lookup",
-					new Suggestions {{null, new List<string> {"result"}}}
+					new SuggestionResultTable {{'\0', new List<string> {"result"}}}
 				}
 			};
 
@@ -203,7 +203,7 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"lookup",
-					new Suggestions {{null, new List<string> {"result"}}}
+					new SuggestionResultTable {{'\0', new List<string> {"result"}}}
 				}
 			};
 
@@ -221,7 +221,7 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"lookup",
-					new Suggestions {{null, new List<string> {"result"}}}
+					new SuggestionResultTable {{'\0', new List<string> {"result"}}}
 				}
 			};
 
@@ -239,7 +239,7 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"lookup",
-					new Suggestions {{null, new List<string> {"result"}}}
+					new SuggestionResultTable {{'\0', new List<string> {"result"}}}
 				}
 			};
 
@@ -257,27 +257,27 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"l",
-					new Suggestions {{'o', new List<string> {"result"}}}
+					new SuggestionResultTable {{'o', new List<string> {"result"}}}
 				},
 				{
 					"lo",
-					new Suggestions {{'o', new List<string> {"result"}}}
+					new SuggestionResultTable {{'o', new List<string> {"result"}}}
 				},
 				{
 					"loo",
-					new Suggestions {{'k', new List<string> {"result"}}}
+					new SuggestionResultTable {{'k', new List<string> {"result"}}}
 				},
 				{
 					"look",
-					new Suggestions {{'u', new List<string> {"result"}}}
+					new SuggestionResultTable {{'u', new List<string> {"result"}}}
 				},
 				{
 					"looku",
-					new Suggestions {{'p', new List<string> {"result"}}}
+					new SuggestionResultTable {{'p', new List<string> {"result"}}}
 				},
 				{
 					"lookup",
-					new Suggestions {{null, new List<string> {"result"}}}
+					new SuggestionResultTable {{'\0', new List<string> {"result"}}}
 				},
 			};
 
@@ -295,27 +295,27 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"l",
-					new Suggestions {{'o', new List<string> {"result"}}}
+					new SuggestionResultTable {{'o', new List<string> {"result"}}}
 				},
 				{
 					"lo",
-					new Suggestions {{'o', new List<string> {"result"}}}
+					new SuggestionResultTable {{'o', new List<string> {"result"}}}
 				},
 				{
 					"loo",
-					new Suggestions {{'k', new List<string> {"result"}}}
+					new SuggestionResultTable {{'k', new List<string> {"result"}}}
 				},
 				{
 					"look",
-					new Suggestions {{'u', new List<string> {"result"}}}
+					new SuggestionResultTable {{'u', new List<string> {"result"}}}
 				},
 				{
 					"looku",
-					new Suggestions {{'p', new List<string> {"result"}}}
+					new SuggestionResultTable {{'p', new List<string> {"result"}}}
 				},
 				{
 					"lookup",
-					new Suggestions {{null, new List<string> {"result"}}}
+					new SuggestionResultTable {{'\0', new List<string> {"result"}}}
 				},
 			};
 
@@ -333,27 +333,27 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"l",
-					new Suggestions {{'o', new List<string> {"result"}}}
+					new SuggestionResultTable {{'o', new List<string> {"result"}}}
 				},
 				{
 					"lo",
-					new Suggestions {{'o', new List<string> {"result"}}}
+					new SuggestionResultTable {{'o', new List<string> {"result"}}}
 				},
 				{
 					"loo",
-					new Suggestions {{'k', new List<string> {"result"}}}
+					new SuggestionResultTable {{'k', new List<string> {"result"}}}
 				},
 				{
 					"look",
-					new Suggestions {{'u', new List<string> {"result"}}}
+					new SuggestionResultTable {{'u', new List<string> {"result"}}}
 				},
 				{
 					"looku",
-					new Suggestions {{'p', new List<string> {"result"}}}
+					new SuggestionResultTable {{'p', new List<string> {"result"}}}
 				},
 				{
 					"lookup",
-					new Suggestions {{null, new List<string> {"result"}}}
+					new SuggestionResultTable {{'\0', new List<string> {"result"}}}
 				},
 			};
 
@@ -365,33 +365,33 @@ namespace StationSearchAlgorithmTests
 		}
 
 		[Test]
-		public void GivenL_ReturnsE()
+		public void GivenL_ReturnsO()
 		{
 			LookupTable lookups = new LookupTable
 			{
 				{
 					"l",
-					new Suggestions {{'o', new List<string> {"result"}}}
+					new SuggestionResultTable {{'o', new List<string> {"result"}}}
 				},
 				{
 					"lo",
-					new Suggestions {{'o', new List<string> {"result"}}}
+					new SuggestionResultTable {{'o', new List<string> {"result"}}}
 				},
 				{
 					"loo",
-					new Suggestions {{'k', new List<string> {"result"}}}
+					new SuggestionResultTable {{'k', new List<string> {"result"}}}
 				},
 				{
 					"look",
-					new Suggestions {{'u', new List<string> {"result"}}}
+					new SuggestionResultTable {{'u', new List<string> {"result"}}}
 				},
 				{
 					"looku",
-					new Suggestions {{'p', new List<string> {"result"}}}
+					new SuggestionResultTable {{'p', new List<string> {"result"}}}
 				},
 				{
 					"lookup",
-					new Suggestions {{null, new List<string> {"result"}}}
+					new SuggestionResultTable {{'\0', new List<string> {"result"}}}
 				},
 			};
 
@@ -399,7 +399,7 @@ namespace StationSearchAlgorithmTests
 
 			var result = engine.Search("l");
 
-			Assert.That(result.Suggestions.Single(), Is.EqualTo('e'));
+			Assert.That(result.Suggestions.Single(), Is.EqualTo('o'));
 		}
 
 		[Test]
@@ -409,27 +409,27 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"l",
-					new Suggestions {{'o', new List<string> {"result"}}}
+					new SuggestionResultTable {{'o', new List<string> {"result"}}}
 				},
 				{
 					"lo",
-					new Suggestions {{'o', new List<string> {"result"}}}
+					new SuggestionResultTable {{'o', new List<string> {"result"}}}
 				},
 				{
 					"loo",
-					new Suggestions {{'k', new List<string> {"result"}}}
+					new SuggestionResultTable {{'k', new List<string> {"result"}}}
 				},
 				{
 					"look",
-					new Suggestions {{'u', new List<string> {"result"}}}
+					new SuggestionResultTable {{'u', new List<string> {"result"}}}
 				},
 				{
 					"looku",
-					new Suggestions {{'p', new List<string> {"result"}}}
+					new SuggestionResultTable {{'p', new List<string> {"result"}}}
 				},
 				{
 					"lookup",
-					new Suggestions {{null, new List<string> {"result"}}}
+					new SuggestionResultTable {{'\0', new List<string> {"result"}}}
 				},
 			};
 
@@ -447,27 +447,27 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"l",
-					new Suggestions {{'o', new List<string> {"result"}}}
+					new SuggestionResultTable {{'o', new List<string> {"result"}}}
 				},
 				{
 					"lo",
-					new Suggestions {{'o', new List<string> {"result"}}}
+					new SuggestionResultTable {{'o', new List<string> {"result"}}}
 				},
 				{
 					"loo",
-					new Suggestions {{'k', new List<string> {"result"}}}
+					new SuggestionResultTable {{'k', new List<string> {"result"}}}
 				},
 				{
 					"look",
-					new Suggestions {{'u', new List<string> {"result"}}}
+					new SuggestionResultTable {{'u', new List<string> {"result"}}}
 				},
 				{
 					"looku",
-					new Suggestions {{'p', new List<string> {"result"}}}
+					new SuggestionResultTable {{'p', new List<string> {"result"}}}
 				},
 				{
 					"lookup",
-					new Suggestions {{null, new List<string> {"result"}}}
+					new SuggestionResultTable {{'\0', new List<string> {"result"}}}
 				},
 			};
 
@@ -479,33 +479,33 @@ namespace StationSearchAlgorithmTests
 		}
 
 		[Test]
-		public void GivenLookup_Returns0Suggestion()
+		public void GivenLookup_ReturnsNoSuggestion()
 		{
 			LookupTable lookups = new LookupTable
 			{
 				{
 					"l",
-					new Suggestions {{'o', new List<string> {"result"}}}
+					new SuggestionResultTable {{'o', new List<string> {"result"}}}
 				},
 				{
 					"lo",
-					new Suggestions {{'o', new List<string> {"result"}}}
+					new SuggestionResultTable {{'o', new List<string> {"result"}}}
 				},
 				{
 					"loo",
-					new Suggestions {{'k', new List<string> {"result"}}}
+					new SuggestionResultTable {{'k', new List<string> {"result"}}}
 				},
 				{
 					"look",
-					new Suggestions {{'u', new List<string> {"result"}}}
+					new SuggestionResultTable {{'u', new List<string> {"result"}}}
 				},
 				{
 					"looku",
-					new Suggestions {{'p', new List<string> {"result"}}}
+					new SuggestionResultTable {{'p', new List<string> {"result"}}}
 				},
 				{
 					"lookup",
-					new Suggestions {{null, new List<string> {"result"}}}
+					new SuggestionResultTable {{'\0', new List<string> {"result"}}}
 				},
 			};
 
@@ -523,7 +523,7 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"l",
-					new Suggestions
+					new SuggestionResultTable
 					{
 						{
 							'o',
@@ -551,7 +551,7 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"l",
-					new Suggestions
+					new SuggestionResultTable
 					{
 						{
 							'o',
@@ -579,7 +579,7 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"l",
-					new Suggestions
+					new SuggestionResultTable
 					{
 						{
 							'o',
@@ -607,7 +607,7 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"l",
-					new Suggestions
+					new SuggestionResultTable
 					{
 						{
 							'o',
@@ -635,7 +635,7 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"l",
-					new Suggestions
+					new SuggestionResultTable
 					{
 						{
 							'o',
@@ -663,7 +663,7 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"l",
-					new Suggestions
+					new SuggestionResultTable
 					{
 						{
 							'o',
@@ -691,7 +691,7 @@ namespace StationSearchAlgorithmTests
 			{
 				{
 					"l",
-					new Suggestions
+					new SuggestionResultTable
 					{
 						{
 							'o',
