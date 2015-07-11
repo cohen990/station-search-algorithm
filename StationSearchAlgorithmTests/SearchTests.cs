@@ -1,0 +1,6 @@
+﻿namespace StationSearchAlgorithmTests
+{
+	class SearchTests
+	{
+	}
+}
