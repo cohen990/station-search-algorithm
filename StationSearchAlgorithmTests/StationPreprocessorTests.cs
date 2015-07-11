@@ -41,16 +41,16 @@ namespace StationSearchAlgorithmTests
 		}
 
 		[Test]
-		public void GivenListOf1StationNameWith1Letter_Returns1KeyValuePair()
+		public void GivenListOf1StationNameWith1Letter_Returns1Lookup()
 		{
 			var preprocessor = new DefaultStationPreprocessor();
-			var result = preprocessor.GetStationsLookups(new List<string> { "a" });
+			LookupTable result = preprocessor.GetStationsLookups(new List<string> { "a" });
 
 			Assert.That(result.Count, Is.EqualTo(1));
 		}
 
 		[Test]
-		public void GivenListOf1StationNameWith1Letter_ReturnsCorrectKey()
+		public void GivenListOf1StationNameWith1Letter_ReturnsCorrectLookup()
 		{
 			var preprocessor = new DefaultStationPreprocessor();
 			var result = preprocessor.GetStationsLookups(new List<string> { "a" });
@@ -84,7 +84,7 @@ namespace StationSearchAlgorithmTests
 
 			var result = preprocessor.GetStationsLookups(new List<string> { expected });
 
-			Assert.That(result.Single().Value.Single(), Is.EqualTo(expected));
+			Assert.That(result.SuggestionResultTables.Single().Single().Value.Single(), Is.EqualTo(expected));
 		}
 
 		[Test]
@@ -212,7 +212,7 @@ namespace StationSearchAlgorithmTests
 			var preprocessor = new DefaultStationPreprocessor();
 			var result = preprocessor.GetStationBeginnings("a");
 
-			Assert.That(result.Single().Value, Is.EqualTo("a"));
+			Assert.That(result.SuggestionResultTables.Single().Single().Value.Single(), Is.EqualTo("a"));
 		}
 
 		[Test]
@@ -239,7 +239,7 @@ namespace StationSearchAlgorithmTests
 			var preprocessor = new DefaultStationPreprocessor();
 			var result = preprocessor.GetStationBeginnings("ab");
 
-			Assert.That(result.SingleOrDefault(x => x.Key == "a").Value, Is.EqualTo("ab"));
+			Assert.That(result["a"].Values.Single().Single(), Is.EqualTo("ab"));
 		}
 
 		[Test]
@@ -275,7 +275,7 @@ namespace StationSearchAlgorithmTests
 			var preprocessor = new DefaultStationPreprocessor();
 			var result = preprocessor.GetStationBeginnings("abcde");
 
-			Assert.That(result.SingleOrDefault(x => x.Key == "abcd").Value, Is.EqualTo("abcde"));
+			Assert.That(result["abcd"].Values.Single().Single(), Is.EqualTo("abcde"));
 		}
 	}
 }
