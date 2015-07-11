@@ -8,7 +8,7 @@ namespace StationSearchAlgorithm
 {
 	class Program
 	{
-		static void Main(string[] args)
+		static void Main()
 		{
 			var watch = Stopwatch.StartNew();
 			Dictionary<string, List<string>> lookups = StationLookup.Get()
@@ -39,6 +39,14 @@ namespace StationSearchAlgorithm
 				}
 
 				Console.WriteLine("Matches: {0}", string.Join(", ", result.Matches));
+
+				if (!result.Suggestions.Any())
+				{
+					Console.WriteLine("No suggestions...");
+					continue;
+				}
+
+				Console.WriteLine("Suggestions: '{0}'", string.Join("', ", result.Suggestions));
 			}
 		}
 	}
