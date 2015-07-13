@@ -13,6 +13,7 @@ namespace StationSearchAlgorithm
 			var watch = Stopwatch.StartNew();
 			Dictionary<string, List<string>> lookups = StationLookup.Get()
 				.With(new FileStationSource("station-names.txt"))
+				//.With(new FileStationSource("BIGdata.txt")) // Swap this with previous line for a file with 22,000 GUIDs
 				.And(new DefaultStationPreprocessor());
 
 			watch.Stop();
@@ -26,11 +27,13 @@ namespace StationSearchAlgorithm
 				Console.WriteLine(Environment.NewLine + "Enter your search term or hit 'Ctrl' + 'C' to quit");
 				var searchTerm = Console.ReadLine();
 
-				watch = Stopwatch.StartNew();
+				watch = new Stopwatch();
+
+				watch.Start();
 				var result = engine.Search(searchTerm);
 				watch.Stop();
 
-				Console.WriteLine("Search completed in {0} miliseconds", watch.ElapsedMilliseconds);
+				Console.WriteLine("Search completed in {0} miliseconds, {1} ticks", watch.ElapsedMilliseconds, watch.ElapsedTicks);
 
 				if(!result.Matches.Any())
 				{
@@ -47,6 +50,8 @@ namespace StationSearchAlgorithm
 				}
 
 				Console.WriteLine("Suggestions: '{0}'", string.Join("', ", result.Suggestions));
+
+				Console.WriteLine("Search completed in {0} miliseconds, {1} ticks", watch.ElapsedMilliseconds, watch.ElapsedTicks);
 			}
 		}
 	}

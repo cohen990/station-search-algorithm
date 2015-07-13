@@ -56,6 +56,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BIGdata.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="station-names.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
